@@ -41,6 +41,11 @@
 #include <unistd.h>
 #include <stdlib.h> // for realpath
 #include <CoreFoundation/CoreFoundation.h>
+#include <AvailabilityMacros.h>
+
+#ifndef MAC_OS_X_VERSION_10_7
+#define MAC_OS_X_VERSION_10_7 1070
+#endif
 
 #define VERSION "20090819"
 
@@ -160,6 +165,9 @@ static void NotificationCallback(CFNotificationCenterRef center,
 	CFRetain(mountPath);
 
 	LOG_DEBUG("done with assigning.\n");
+#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_7
+	CFRunLoopStop(CFRunLoopGetCurrent());
+#endif
       }
       else
 	LOG_DEBUG("  no.");
@@ -277,16 +285,23 @@ int main(int argc, char** argv) {
     LOG_DEBUG("Running run loop a long time...\n");
     CFStringRef mountPathSnapshot = NULL;
     while(mountPathSnapshot == NULL) {
+#if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_7
       int crlrimRetval = CFRunLoopRunInMode(kCFRunLoopDefaultMode, timeout, true);
       LOG_DEBUG("Exited from run loop. Let's find out why... crlrimRetval: %d "
 		"(handled: %d)\n", crlrimRetval, kCFRunLoopRunHandledSource);
+#else
+      CFRunLoopRunInMode(kCFRunLoopDefaultMode, timeout, true);
+      LOG_DEBUG("Exited from run loop. Let's find out why.\n");
+#endif
       mountPathSnapshot = mountPath; // Might have been modified during RunLoop.
+#if MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_7
       if(crlrimRetval != kCFRunLoopRunHandledSource) {
 	fprintf(stderr, "Did not receive a signal within %f seconds. "
 		"Exiting...\n", timeout);
 	return -2;
       }
-      else if(mountPathSnapshot != NULL) {
+#endif
+      if(mountPathSnapshot != NULL) {
 	LOG_DEBUG("mountPathSnapshot: %p\n", mountPathSnapshot);
 	
 	/*

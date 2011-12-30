@@ -9,11 +9,11 @@ PROJNAME="fuse_wait"
 
 DESTDIR="usr/local/bin"
 
-CC=gcc-4.0
+CC=llvm-gcc
 
-OSX_TARGET=10.4
-SDK=/Developer/SDKs/MacOSX10.4u.sdk
-TARGET_FLAGS="-arch i386 -arch ppc ${OSX_TARGET:+-mmacosx-version-min=${OSX_TARGET}}"
+OSX_TARGET=10.7
+SDK=/Developer/SDKs/MacOSX10.7.sdk
+TARGET_FLAGS="-arch i386 ${OSX_TARGET:+-mmacosx-version-min=${OSX_TARGET}}"
 COMPILE_FLAGS="${TARGET_FLAGS} ${SDK:+-isysroot ${SDK}} -Wl,-syslibroot,${SDK}} -g -Wall -fconstant-cfstrings -framework CoreFoundation"
 
 ${CC} ${COMPILE_FLAGS} -o "${TMP_DIR}/${PROJNAME}" "${DIST_DIR}/${PROJNAME}.c" && \
