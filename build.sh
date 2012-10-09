@@ -9,14 +9,14 @@ PROJNAME="fuse_wait"
 
 DESTDIR="usr/local/bin"
 
-CC=llvm-gcc
+CC="`xcrun -find llvm-gcc`"
 
 OSX_TARGET=10.7
-SDK=/Developer/SDKs/MacOSX10.7.sdk
+SDK="`xcodebuild -version -sdk macosx10.7 Path`"
 TARGET_FLAGS="-arch i386 ${OSX_TARGET:+-mmacosx-version-min=${OSX_TARGET}}"
 COMPILE_FLAGS="${TARGET_FLAGS} ${SDK:+-isysroot ${SDK}} -Wl,-syslibroot,${SDK}} -g -Wall -fconstant-cfstrings -framework CoreFoundation"
 
-${CC} ${COMPILE_FLAGS} -o "${TMP_DIR}/${PROJNAME}" "${DIST_DIR}/${PROJNAME}.c" && \
+"${CC}" ${COMPILE_FLAGS} -o "${TMP_DIR}/${PROJNAME}" "${DIST_DIR}/${PROJNAME}.c" && \
     sudo cp "${TMP_DIR}/${PROJNAME}" "${ROOT_DIR}/${DESTDIR}" && \
     sudo chmod 755 "${ROOT_DIR}/${DESTDIR}/${PROJNAME}" && \
     sudo chown root:wheel "${ROOT_DIR}/${DESTDIR}/${PROJNAME}"
