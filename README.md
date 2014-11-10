@@ -10,10 +10,13 @@ An installer package containing the patched version of `fuse_wait` can be obtain
 
 ## Manual Installation
 
-Clone this repository and run the following commands to build and install this version of `fuse_wait` on Mac OS X 10.7. Please note that Xcode has to be installed for this to work.
+Clone this repository and run the following commands to build and install this version of `fuse_wait` on Mac OS X 10.7. Please note that Xcode and also the 10.7 SDK has to be installed for this to work.
 
     sudo mv /usr/local/bin/fuse_wait /usr/local/bin/fuse_wait.orig
     ./build.sh . /tmp /
+
+### Yosemite Installation
+Please note that out of the box Yosemite+XCode can not run the build.sh script. Use build_yosemite.sh for Yosemite.
 
 To revert to the original `fuse_wait` program, run the following command in Terminal:
 
